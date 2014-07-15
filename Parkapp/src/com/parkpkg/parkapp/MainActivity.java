@@ -10,7 +10,7 @@ public class MainActivity extends Activity {
 	private GoogleMap mMap;
 
 	
-
+//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
