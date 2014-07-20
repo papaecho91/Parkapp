@@ -11,6 +11,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -28,19 +29,18 @@ import android.widget.Toast;
  *
  */
 
-public class MainActivity extends Activity implements LocationListener{
+public class MainActivity extends Activity {
 
 	// instance variables
 
-	private GoogleMap googleMap;
+	public GoogleMap googleMap;
 	
 	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        
+
         if(connectionToGooglePlay()){
         	setContentView(R.layout.activity_main);
         	setUpMapIfNeeded();
@@ -61,6 +61,9 @@ public class MainActivity extends Activity implements LocationListener{
     		
     		
     }
+    
+
+    
     /**
      * This method is used to make sure we can interact and customize the map
      */
@@ -69,48 +72,31 @@ public class MainActivity extends Activity implements LocationListener{
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
             
-            // Check if we were successful in obtaining the map.
+            /** 
+             * Check if we were successful in obtaining the map.
+             * If it works, we can start using the map
+             */
             if (googleMap != null) {
-                
-            	googleMap.setMyLocationEnabled(true);
-            	LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-            	String provider = lm.getBestProvider(new Criteria(), true);
-            	
-            	if (provider == null) {
-            		onProviderDisabled(provider);
-            	}
-            	
-            	Location loc = lm.getLastKnownLocation(provider);
-            	if(loc != null){
-            		onLocationChanged(loc);
-            	}
+            	getLocation();
+
 
             }
         }
     }
-	@Override
-	public void onLocationChanged(Location arg0) {
-		// TODO Auto-generated method stub
-		LatLng latLng = new LatLng(57.7000, 11.9667);
-		
-		googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-		googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-	}
-	@Override
-	public void onProviderDisabled(String arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void onProviderEnabled(String arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-		// TODO Auto-generated method stub
-		
-	}
     
+    private void getLocation(){
+    	// Get my current location
+    	googleMap.setMyLocationEnabled(true);
+    	
+    	LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+    	String provider = lm.getBestProvider(new Criteria(), true);
+    	Location pos = lm.getLastKnownLocation(provider);
 
+    	LatLng latlng = new LatLng(pos.getLatitude(), pos.getLongitude());
+		googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+		
+		googleMap.addMarker(new MarkerOptions().position(latlng).title("Home"));
+		
+    }
 }
