@@ -1,4 +1,7 @@
 package com.parkpkg.parkapp;
+
+import java.net.URL;
+
 /**
  * @author Patrik
  *
@@ -11,5 +14,10 @@ public class ParkingService {
 			"longitude={LONGITUDE}&" +
 			"radius={RADIUS}&f" +
 			"ormat=json";
+	
+	
+	public void ParkingData(){
+		URL url = new URL();
+	}
 
 }
