@@ -1,86 +1,107 @@
 package com.parkpkg.parkapp;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.net.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 import android.util.Log;
+import android.widget.Toast;
 
 /**
- * @author Patrik
+ * @author 
  *
  */
 public class ParkingService {
 	
+	private static final String TAG = "ParkingService";
+	
 	//Instance variables for URL
-	static final String PublicTollParkings =
+	static final String publicTollParkings =
 			"http://data.goteborg.se/ParkingService/v2.0/PublicTollParkings" +
 			"/%7B57217002-37bb-43ce-8867-69a9b01cf6e9%7D?" +
 			"latitude={LATITUDE}&" +
 			"longitude={LONGITUDE}&" +
 			"radius={RADIUS}&f" +
 			"ormat=json";
-	static final String PrivateTollParkings =
+	static final String privateTollParkings =
 			"http://data.goteborg.se/ParkingService/v2.1/PrivateTollParkings" +
 					"/%7B57217002-37bb-43ce-8867-69a9b01cf6e9%7D?" +
 					"latitude={LATITUDE}&" +
 					"longitude={LONGITUDE}&" +
 					"radius={RADIUS}&f" +
 					"ormat=json";
-	
 	/**
-	 * Create connection and parse the data
-	 * @return 
-	 * @throws MalformedURLException, IOException
+	 * 
+	 * @return line
+	 * @throws MalformedURLException
+	 * @throws IOException
 	 */
-	public String ParkingData() throws MalformedURLException, IOException{
+	public String getAllParkings() throws Exception{
+		String data = null;
+		try{
+			URL url = new URL("http://www.google.se");
+			try{
+				URLConnection connect = url.openConnection();
+				BufferedReader in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+				data = in.readLine();
+			}catch (IOException e){
+				e.printStackTrace();
+			}
+			
 
-	    InputStream is = null;
-	    // Only display the first 500 characters of the retrieved
-	    // web page content.
-	    int len = 500;
-	        
-	    try {
-	        URL url = new URL(PublicTollParkings);
-	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	        conn.setReadTimeout(10000 /* milliseconds */);
-	        conn.setConnectTimeout(15000 /* milliseconds */);
-	        conn.setRequestMethod("GET");
-	        conn.setDoInput(true);
-	        // Starts the query
-	        conn.connect();
-//	        int response = conn.getResponseCode();
-//  	    Log.d(DEBUG_TAG, "The response is: " + response);
-	        is = conn.getInputStream();
-
-
-	        // Convert the InputStream into a string
-	        String contentAsString = readIt(is, len);
-	        System.out.println(contentAsString);
-	        return contentAsString;
-	        
-	    // Makes sure that the InputStream is closed after the app is
-	    // finished using it.
-	    } finally {
-	        if (is != null) {
-	            is.close();
-	        } 
-	    }
-
+		}catch (MalformedURLException e){
+			e.printStackTrace();
+		}
+		return data;
+		
+//		BufferedReader in = null;
+//		String data = null;
+//		String line;
+//		String newLine = System.getProperty("line.separator");
+//		try{
+//			HttpClient client = new DefaultHttpClient();
+//			URI website = new URI("http://www.google.se");
+//			HttpGet request = new HttpGet();
+//			request.setURI(website);
+//			HttpResponse response = client.execute(request);
+//			in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+//			StringBuffer sb = new StringBuffer("");
+//			
+//			while((line = in.readLine()) !=null){
+//				sb.append(line+newLine);
+//			}
+//			in.close();
+//			data = sb.toString();
+//			return data;
+//		}finally{
+//			if(in !=null){
+//				try{
+//					in.close();
+//					return data;
+//				}catch (Exception e){
+//					e.printStackTrace();
+//				}
+//			}
+//		}
 	}
-	// Reads an InputStream and converts it to a String.
-	public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-	    Reader reader = null;
-	    reader = new InputStreamReader(stream, "UTF-8");        
-	    char[] buffer = new char[len];
-	    reader.read(buffer);
-	    return new String(buffer);
-	}
+
+		
+
 
 }
