@@ -5,6 +5,9 @@
 
 package com.parkpkg.parkapp;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,11 +23,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
  * 
- * @author Patrik Evertsson
+ * @author 
  * @version 0.0.2
  *
  */
@@ -35,15 +39,35 @@ public class MainActivity extends Activity {
 
 	public GoogleMap googleMap;
 	
-	
+	private static final String TAG = "MainActivity";	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        
+        
+       
+
         if(connectionToGooglePlay()){
         	setContentView(R.layout.activity_main);
         	setUpMapIfNeeded();
+            Log.i(TAG, "--------HEJ-------");
+            ParkingService ps = new ParkingService();
+            String parkData;
+    		try {
+    			parkData = ps.getAllParkings();
+    			Log.i(TAG, parkData);
+    		} catch (MalformedURLException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         
     }
