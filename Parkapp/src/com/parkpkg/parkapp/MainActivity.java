@@ -22,58 +22,63 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
 /**
  * 
- * @author 
+ * @author Patrik Evertsson
  * @version 0.0.2
- *
+ * 
+ * This is the MainActivity class with the map fragment
+ * It connects to google play and sets up the google map.
  */
 
 public class MainActivity extends Activity {
 
-	// instance variables
+
 
 	public GoogleMap googleMap;
 	
-	private static final String TAG = "MainActivity";	
+	private static final String TAG = "MainActivity";
+	private static final String TAG1 = "Parkingdata";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         
-        
-       
-
+        //Draw google map only if connected to google play
         if(connectionToGooglePlay()){
+
+            //  This if-statement makes sure I can connect to the network 
+            //  without creating a separated thread. 
+
+        	if (android.os.Build.VERSION.SDK_INT > 9) {
+                StrictMode.ThreadPolicy policy = 
+                        new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                }
+        	
         	setContentView(R.layout.activity_main);
         	setUpMapIfNeeded();
-            Log.i(TAG, "--------HEJ-------");
+            
+        	Log.i(TAG, "--------MainActivity-------");
+            
             ParkingService ps = new ParkingService();
             String parkData;
-    		try {
-    			parkData = ps.getAllParkings();
-    			Log.i(TAG, parkData);
-    		} catch (MalformedURLException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+    		parkData = ps.getAllParkings();
+    		Log.i(TAG1, parkData);
+
         }
         
     }
+    
     /**
      * Test connection between the app and Google Play
-     * @return true if the connection works, false it displays a dialog with the error
+     * @return boolean
      */
     private boolean connectionToGooglePlay(){
     	int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
