@@ -59,15 +59,16 @@ public class ParkingService {
 	
 	
 	/**
-	 * This method will download the data from the URL formatted in JSON and 
-	 * returned all JSON data in a string.
-	 * @return String
-	 * @throws JSONException 
+	 * This method will download the data from the URL formatted in JSON  
+	 * 
+	 * @return JSONObject
+	 *  
 	 */
 	
 	public JSONObject getAllParkings() {
 		String data = null;
 		JSONObject json = new JSONObject();
+		JSONArray jsonarray = new JSONArray();
 		String jsonobject = null;
 
 		try{
@@ -79,8 +80,8 @@ public class ParkingService {
 				in.close();
 				
 				try {
-					JSONArray jsonArray = json.getJSONArray(data);
-					json = jsonArray.getJSONObject(0);
+					jsonarray = json.getJSONArray(data);
+					json = jsonarray.getJSONObject(0);
 
 				} catch (JSONException e) {
 					Log.i(TAG, "JSONException");
