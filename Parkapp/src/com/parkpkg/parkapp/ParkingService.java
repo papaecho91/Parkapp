@@ -1,6 +1,6 @@
 /**
  * MainActivity.java 2014-07-16
- * Copyright Patrik Evertsson
+ * Copyright 
  */
 
 package com.parkpkg.parkapp;
