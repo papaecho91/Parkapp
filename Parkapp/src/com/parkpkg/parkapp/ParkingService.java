@@ -10,6 +10,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.util.Log;
+
+
+
+
+
 
 
 /**
@@ -52,10 +62,14 @@ public class ParkingService {
 	 * This method will download the data from the URL formatted in JSON and 
 	 * returned all JSON data in a string.
 	 * @return String
+	 * @throws JSONException 
 	 */
 	
-	public String getAllParkings() {
+	public JSONObject getAllParkings() {
 		String data = null;
+		JSONObject json = new JSONObject();
+		String jsonobject = null;
+
 		try{
 			URL url = new URL(publicTollParkings);
 			try{
@@ -63,16 +77,56 @@ public class ParkingService {
 				BufferedReader in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
 				data = in.readLine();
 				in.close();
+				
+				try {
+					JSONArray jsonArray = json.getJSONArray(data);
+					json = jsonArray.getJSONObject(0);
+
+				} catch (JSONException e) {
+					Log.i(TAG, "JSONException");
+					e.printStackTrace();
+				}//JSON
 
 			}catch (IOException e){
 				e.printStackTrace();
-			}
+			}//IO
 			
 		}catch (MalformedURLException e){
 			e.printStackTrace();
-		}
-		return data;
+		}//URL
+		
+
+		
+		
+		
+
+		return json;
+
+
 	}
+	
+	
+//	Id: Unikt id för parkeringen, om det är en kommunal parkering är det dess LTF-nummer
+//	Name: Namn på parkeringen, oftast en adress eller namnet på P-huset
+//	Owner: Anger vem som äger parkeringen, mer information om ägaren kan fås via metoden ParikingOwners
+//	FreeSpaces: Antal ledig platster just nu
+//	FreeSpacesDate: När antal lediga platser senast uppdaterades
+//	ParkingSpaces: Totalt antal parkeringsplatser
+//	ParkableLength: Antal meter fickparkeringar
+//	ParkingSpaceCount: Antal P-rutor
+//	PhoneParkingCode: Telefonparkeringskod (fr.o.m. v2.0)
+//	ParkingCharge: Taxa
+//	ParkingCost: Kostnad i klartext
+//	CurrentParkingCost: Kostnad per timme att parkera just nu
+//	MaxParkingTime: Max tillåten P-tid
+//	MaxParkingTimeLimitation: Ytterligare villkor till max tillåten P-tid
+//	ResidentialParkingArea: Boendeparkering, t.ex M4
+//	ExtraInfo: Övrig info, t.ex. städzon mm
+//	Distance: Avstånd i meter från aktuell position (returneras endast om egen position skickats in)
+//	Lat: Latitud i WGS84
+//	Long: Longitud i WGS84
+
+	
 	
 
 		

@@ -6,7 +6,11 @@
 package com.parkpkg.parkapp;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -53,8 +57,8 @@ public class MainActivity extends Activity {
         //Draw google map only if connected to google play
         if(connectionToGooglePlay()){
 
-            //  This if-statement makes sure I can connect to the network 
-            //  without creating a separated thread. 
+            //  This if-statement makes sure I can run network code in
+            //  the UI thread
 
         	if (android.os.Build.VERSION.SDK_INT > 9) {
                 StrictMode.ThreadPolicy policy = 
@@ -66,11 +70,15 @@ public class MainActivity extends Activity {
         	setUpMapIfNeeded();
             
         	Log.i(TAG, "--------MainActivity-------");
-            
+    		
+        	
             ParkingService ps = new ParkingService();
-            String parkData;
-    		parkData = ps.getAllParkings();
-    		Log.i(TAG1, parkData);
+            Parking parking = new Parking(ps.getAllParkings());
+
+    		Log.i(TAG1, parking.getName());
+
+
+
 
         }
         
