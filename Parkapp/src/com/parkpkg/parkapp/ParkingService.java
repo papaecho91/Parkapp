@@ -23,7 +23,7 @@ import android.util.Log;
 
 
 /**
- * @author Patrik Evertsson
+ * @author 
  *
  * This class is used to download JSON data from a URL
  * and return the JSON data formatted as a string.

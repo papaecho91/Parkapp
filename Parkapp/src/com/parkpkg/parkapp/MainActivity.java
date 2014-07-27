@@ -1,6 +1,6 @@
 /**
  * MainActivity.java 2014-07-16
- * Copyright Patrik Evertsson
+ * Copyright 
  */
 
 package com.parkpkg.parkapp;
@@ -34,7 +34,7 @@ import android.widget.Toast;
 
 /**
  * 
- * @author Patrik Evertsson
+ * @author 
  * @version 0.0.2
  * 
  * This is the MainActivity class with the map fragment
