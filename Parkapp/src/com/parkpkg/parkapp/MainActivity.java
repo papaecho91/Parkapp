@@ -5,12 +5,6 @@
 
 package com.parkpkg.parkapp;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -22,6 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -56,6 +51,7 @@ public class MainActivity extends Activity {
         
         //Draw google map only if connected to google play
         if(connectionToGooglePlay()){
+        	
 
             //  This if-statement makes sure I can run network code in
             //  the UI thread
@@ -67,15 +63,15 @@ public class MainActivity extends Activity {
                 }
         	
         	setContentView(R.layout.activity_main);
-        	setUpMapIfNeeded();
-            
+        	setUpMapIfNeeded();       	
         	Log.i(TAG, "--------MainActivity-------");
     		
         	
             ParkingService ps = new ParkingService();
             Parking parking = new Parking(ps.getAllParkings());
 
-    		Log.i(TAG1, parking.getName());
+    		Log.i(TAG1, parking.getAllAttr());
+    		
 
 
 
@@ -136,4 +132,5 @@ public class MainActivity extends Activity {
 		googleMap.addMarker(new MarkerOptions().position(latlng).title("Home"));
 		
     }
+    
 }

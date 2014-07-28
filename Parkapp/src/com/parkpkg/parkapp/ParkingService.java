@@ -6,8 +6,10 @@
 package com.parkpkg.parkapp;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.*;
 
 import org.json.JSONArray;
@@ -66,33 +68,44 @@ public class ParkingService {
 	 */
 	
 	public JSONObject getAllParkings() {
+
 		String data = null;
-		JSONObject json = new JSONObject();
+		JSONObject jsondata = new JSONObject();
 		JSONArray jsonarray = new JSONArray();
-		String jsonobject = null;
+		JSONObject jsonobject = new JSONObject();
+		String name = null;
 
 		try{
 			URL url = new URL(publicTollParkings);
 			try{
 				URLConnection connect = url.openConnection();
 				BufferedReader in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-				data = in.readLine();
-				in.close();
+				
+				URLConnection connection = new URL(url.toString()).openConnection();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(
+						connection.getInputStream()), 1024 * 16);
+				
+				data = reader.readLine();
+				reader.close();
 				
 				try {
-					jsonarray = json.getJSONArray(data);
-					json = jsonarray.getJSONObject(0);
+					jsonarray = new JSONArray(data);
+					jsonobject = jsonarray.getJSONObject(0);
 
+					
 				} catch (JSONException e) {
 					Log.i(TAG, "JSONException");
 					e.printStackTrace();
 				}//JSON
+				
 
 			}catch (IOException e){
+				Log.i(TAG, "IOException");
 				e.printStackTrace();
 			}//IO
 			
 		}catch (MalformedURLException e){
+			Log.i(TAG, "MalformedURLException");
 			e.printStackTrace();
 		}//URL
 		
@@ -101,7 +114,7 @@ public class ParkingService {
 		
 		
 
-		return json;
+		return jsonobject;
 
 
 	}

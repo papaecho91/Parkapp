@@ -122,4 +122,14 @@ public class Parking implements  Serializable {
 	public String getMaxParking() {
 		return maxParking;
 	}
+	
+	public String getAllAttr(){
+		return getId() + getExtraInfo() + getParkableLength() +
+				getParkingSpaces() + getParkingSpaceCount() +
+				getFreeSpaces() + getParkingCost() + getLng() +
+				getCurrentParkingCost() + getResidentialParking() +
+				getResidentialParking() + getLat() + getName() +
+				getMaxParking();
+				
+	}
 }
