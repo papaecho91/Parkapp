@@ -70,7 +70,12 @@ public class MainActivity extends Activity {
             ParkingService ps = new ParkingService();
             Parking parking = new Parking(ps.getAllParkings());
 
-    		Log.i(TAG1, parking.getAllAttr());
+            double dlatlng = parking.getLng() + parking.getLat();
+            
+            Log.i(TAG1, parking.getName());
+            
+
+            
     		
 
 
@@ -124,13 +129,22 @@ public class MainActivity extends Activity {
     	LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
     	String provider = lm.getBestProvider(new Criteria(), true);
     	Location pos = lm.getLastKnownLocation(provider);
-
-    	LatLng latlng = new LatLng(pos.getLatitude(), pos.getLongitude());
-		googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+    	
+        
+		ParkingService ps = new ParkingService();
+        Parking parking = new Parking(ps.getAllParkings());
 		
+        LatLng latlng = new LatLng(pos.getLatitude(), pos.getLongitude());
+        LatLng parkpos = new LatLng(parking.getLat(),parking.getLng());
+		
+        googleMap.addMarker(new MarkerOptions().position(parkpos).title(parking.getItems()));	
 		googleMap.addMarker(new MarkerOptions().position(latlng).title("Home"));
 		
+		googleMap.moveCamera(CameraUpdateFactory.newLatLng(parkpos));
+		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+		
     }
+    
+    
     
 }

@@ -90,7 +90,8 @@ public class ParkingService {
 				
 				try {
 					jsonarray = new JSONArray(data);
-					jsonobject = jsonarray.getJSONObject(0);
+					
+					jsonobject = jsonarray.getJSONObject(5);
 
 					
 				} catch (JSONException e) {
@@ -120,25 +121,7 @@ public class ParkingService {
 	}
 	
 	
-//	Id: Unikt id för parkeringen, om det är en kommunal parkering är det dess LTF-nummer
-//	Name: Namn på parkeringen, oftast en adress eller namnet på P-huset
-//	Owner: Anger vem som äger parkeringen, mer information om ägaren kan fås via metoden ParikingOwners
-//	FreeSpaces: Antal ledig platster just nu
-//	FreeSpacesDate: När antal lediga platser senast uppdaterades
-//	ParkingSpaces: Totalt antal parkeringsplatser
-//	ParkableLength: Antal meter fickparkeringar
-//	ParkingSpaceCount: Antal P-rutor
-//	PhoneParkingCode: Telefonparkeringskod (fr.o.m. v2.0)
-//	ParkingCharge: Taxa
-//	ParkingCost: Kostnad i klartext
-//	CurrentParkingCost: Kostnad per timme att parkera just nu
-//	MaxParkingTime: Max tillåten P-tid
-//	MaxParkingTimeLimitation: Ytterligare villkor till max tillåten P-tid
-//	ResidentialParkingArea: Boendeparkering, t.ex M4
-//	ExtraInfo: Övrig info, t.ex. städzon mm
-//	Distance: Avstånd i meter från aktuell position (returneras endast om egen position skickats in)
-//	Lat: Latitud i WGS84
-//	Long: Longitud i WGS84
+
 
 	
 	
