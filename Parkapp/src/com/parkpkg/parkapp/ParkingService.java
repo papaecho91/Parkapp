@@ -6,10 +6,9 @@
 package com.parkpkg.parkapp;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+
 import java.net.*;
 
 import org.json.JSONArray;
@@ -67,7 +66,7 @@ public class ParkingService {
 	 *  
 	 */
 	
-	public JSONObject getAllParkings() {
+	public Parking[] getAllParkings() {
 
 		String data = null;
 		JSONObject jsondata = new JSONObject();
@@ -91,8 +90,14 @@ public class ParkingService {
 				try {
 					jsonarray = new JSONArray(data);
 					
-					jsonobject = jsonarray.getJSONObject(5);
+					//jsonobject = jsonarray.getJSONObject(5);
+					Parking[] parkings = new Parking[jsonarray.length()];
 
+					for (int i = 0; i < jsonarray.length(); i++) {
+						parkings[i] = new Parking(jsonarray.getJSONObject(i));
+					}
+
+					return parkings;
 					
 				} catch (JSONException e) {
 					Log.i(TAG, "JSONException");
@@ -112,10 +117,10 @@ public class ParkingService {
 		
 
 		
-		
-		
+		Log.i(TAG, "----------ParkingService-----------");
+		return new Parking[0];
 
-		return jsonobject;
+		
 
 
 	}

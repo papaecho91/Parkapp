@@ -51,30 +51,41 @@ public class MainActivity extends Activity {
         
         //Draw google map only if connected to google play
         if(connectionToGooglePlay()){
-        	
-
-            //  This if-statement makes sure I can run network code in
+        	setContentView(R.layout.activity_main);
+        	setUpMapIfNeeded();       	
+        	Log.i(TAG, "--------OnCreate-------");
+           
+        	//  This if-statement makes sure I can run network code in
             //  the UI thread
-
         	if (android.os.Build.VERSION.SDK_INT > 9) {
                 StrictMode.ThreadPolicy policy = 
                         new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
                 }
-        	
-        	setContentView(R.layout.activity_main);
-        	setUpMapIfNeeded();       	
-        	Log.i(TAG, "--------MainActivity-------");
+
     		
         	
             ParkingService ps = new ParkingService();
-            Parking parking = new Parking(ps.getAllParkings());
-
-            double dlatlng = parking.getLng() + parking.getLat();
             
-            Log.i(TAG1, parking.getName());
+            Parking[] parking = new Parking[10];
+            
+            parking = ps.getAllParkings();
+            
+            for(int i = 0; i < parking.length; i++){
+            	Log.i(TAG, parking[i].getName());
+            }
+
+            
+            
+			//parkings = ps.getAllParkings();
+
+			
+            
+            
             
 
+            
+            
             
     		
 
@@ -129,19 +140,18 @@ public class MainActivity extends Activity {
     	LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
     	String provider = lm.getBestProvider(new Criteria(), true);
     	Location pos = lm.getLastKnownLocation(provider);
-    	
+    	LatLng latlng = new LatLng(pos.getLatitude(), pos.getLongitude());
         
-		ParkingService ps = new ParkingService();
-        Parking parking = new Parking(ps.getAllParkings());
-		
-        LatLng latlng = new LatLng(pos.getLatitude(), pos.getLongitude());
-        LatLng parkpos = new LatLng(parking.getLat(),parking.getLng());
-		
-        googleMap.addMarker(new MarkerOptions().position(parkpos).title(parking.getItems()));	
-		googleMap.addMarker(new MarkerOptions().position(latlng).title("Home"));
-		
-		googleMap.moveCamera(CameraUpdateFactory.newLatLng(parkpos));
-		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+//		ParkingService ps = new ParkingService();
+//        Parking parking = new Parking(ps.getAllParkings());
+//		 
+//        LatLng parkpos = new LatLng(parking.getLat(),parking.getLng());
+//		
+//        googleMap.addMarker(new MarkerOptions().position(parkpos).title(parking.getItems()));	
+//		googleMap.addMarker(new MarkerOptions().position(latlng).title("Home"));
+//		
+//		googleMap.moveCamera(CameraUpdateFactory.newLatLng(parkpos));
+//		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 		
     }
     
