@@ -66,7 +66,7 @@ public class ParkingService {
 	 *  
 	 */
 	
-	public Parking[] getAllParkings() {
+	public Parking[] getParkingArray() {
 
 		String data = null;
 		JSONObject jsondata = new JSONObject();
@@ -75,7 +75,7 @@ public class ParkingService {
 		String name = null;
 
 		try{
-			URL url = new URL(publicTollParkings);
+			URL url = new URL(privateTollParkings);
 			try{
 				URLConnection connect = url.openConnection();
 				BufferedReader in = new BufferedReader(new InputStreamReader(connect.getInputStream()));

@@ -52,44 +52,10 @@ public class MainActivity extends Activity {
         //Draw google map only if connected to google play
         if(connectionToGooglePlay()){
         	setContentView(R.layout.activity_main);
-        	setUpMapIfNeeded();       	
         	Log.i(TAG, "--------OnCreate-------");
-           
-        	//  This if-statement makes sure I can run network code in
-            //  the UI thread
-        	if (android.os.Build.VERSION.SDK_INT > 9) {
-                StrictMode.ThreadPolicy policy = 
-                        new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
-                }
-
-    		
+        	setUpMapIfNeeded();       	
         	
-            ParkingService ps = new ParkingService();
-            
-            Parking[] parking = new Parking[10];
-            
-            parking = ps.getAllParkings();
-            
-            for(int i = 0; i < parking.length; i++){
-            	Log.i(TAG, parking[i].getName());
-            }
-
-            
-            
-			//parkings = ps.getAllParkings();
-
-			
-            
-            
-            
-
-            
-            
-            
-    		
-
-
+           
 
 
         }
@@ -126,21 +92,35 @@ public class MainActivity extends Activity {
              * If it works, we can start using the map
              */
             if (googleMap != null) {
-            	getLocation();
+
+            	//  This if-statement makes sure I can run network code in
+                //  the UI thread
+            	if (android.os.Build.VERSION.SDK_INT > 9) {
+                    StrictMode.ThreadPolicy policy = 
+                            new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    }
+            	getMyLocation();
+            	drawParkingMarkers();
 
 
             }
         }
     }
     
-    private void getLocation(){
+    private void getMyLocation(){
     	// Get my current location
     	googleMap.setMyLocationEnabled(true);
-    	
+ 
     	LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
     	String provider = lm.getBestProvider(new Criteria(), true);
     	Location pos = lm.getLastKnownLocation(provider);
-    	LatLng latlng = new LatLng(pos.getLatitude(), pos.getLongitude());
+    	
+    	LatLng mypos = new LatLng(pos.getLatitude(), pos.getLongitude());
+		
+    	googleMap.moveCamera(CameraUpdateFactory.newLatLng(mypos));
+		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+
         
 //		ParkingService ps = new ParkingService();
 //        Parking parking = new Parking(ps.getAllParkings());
@@ -153,6 +133,22 @@ public class MainActivity extends Activity {
 //		googleMap.moveCamera(CameraUpdateFactory.newLatLng(parkpos));
 //		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 		
+    }
+    
+    private void drawParkingMarkers(){
+    	
+    	LatLng parkpos = new LatLng(0.0,0.0);
+    	
+    	ParkingService ps = new ParkingService();
+        Parking[] parking = new Parking[10];
+        
+        parking = ps.getParkingArray();
+        
+        for(int i = 0; i < parking.length; i++){
+        	Log.i(TAG, parking[i].getName());
+        	parkpos = new LatLng(parking[i].getLat(), parking[i].getLng());
+        	googleMap.addMarker(new MarkerOptions().position(parkpos).title(parking[i].getName()));
+        }
     }
     
     

@@ -137,6 +137,10 @@ public class Parking implements  Serializable {
 		return getName() + "Maxp: "+getMaxParking() + "Currentpc: "+getCurrentParkingCost() +
 				"Parkingsp: "+ getParkingSpaces();
 	}
+	
+	public double getLatLng(){
+		return getLat() + getLng();
+	}
 }
 
 //Id: Unikt id för parkeringen, om det är en kommunal parkering är det dess LTF-nummer
