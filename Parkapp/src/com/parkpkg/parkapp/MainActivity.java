@@ -11,12 +11,17 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -53,10 +58,19 @@ public class MainActivity extends Activity {
         if(connectionToGooglePlay()){
         	setContentView(R.layout.activity_main);
         	Log.i(TAG, "--------OnCreate-------");
-        	setUpMapIfNeeded();       	
+        	setUpMapIfNeeded();   
+        	getMyLocation();
         	
-           
-
+        	//  This if-statement makes sure I can run network code in
+            //  the UI thread
+        	if (android.os.Build.VERSION.SDK_INT > 9) {
+                StrictMode.ThreadPolicy policy = 
+                        new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                }
+        	
+        	Drawmarkers drawmarkers = new Drawmarkers();
+        	drawmarkers.parkingMarkers(googleMap);
 
         }
         
@@ -76,9 +90,7 @@ public class MainActivity extends Activity {
     		
     		
     }
-    
-
-    
+     
     /**
      * This method is used to make sure we can interact and customize the map
      */
@@ -93,23 +105,16 @@ public class MainActivity extends Activity {
              */
             if (googleMap != null) {
 
-            	//  This if-statement makes sure I can run network code in
-                //  the UI thread
-            	if (android.os.Build.VERSION.SDK_INT > 9) {
-                    StrictMode.ThreadPolicy policy = 
-                            new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-                    }
-            	getMyLocation();
-            	drawParkingMarkers();
-
-
             }
         }
     }
     
+    /**
+     * Get my position and zoom to it on map
+     */
     private void getMyLocation(){
     	// Get my current location
+    	
     	googleMap.setMyLocationEnabled(true);
  
     	LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -120,36 +125,22 @@ public class MainActivity extends Activity {
 		
     	googleMap.moveCamera(CameraUpdateFactory.newLatLng(mypos));
 		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+		googleMap.addMarker(new MarkerOptions().position(mypos).title("Home").snippet("Mitt hem").snippet("En till"));
 
-        
-//		ParkingService ps = new ParkingService();
-//        Parking parking = new Parking(ps.getAllParkings());
-//		 
-//        LatLng parkpos = new LatLng(parking.getLat(),parking.getLng());
-//		
-//        googleMap.addMarker(new MarkerOptions().position(parkpos).title(parking.getItems()));	
-//		googleMap.addMarker(new MarkerOptions().position(latlng).title("Home"));
-//		
-//		googleMap.moveCamera(CameraUpdateFactory.newLatLng(parkpos));
-//		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 		
     }
+
     
-    private void drawParkingMarkers(){
-    	
-    	LatLng parkpos = new LatLng(0.0,0.0);
-    	
-    	ParkingService ps = new ParkingService();
-        Parking[] parking = new Parking[10];
-        
-        parking = ps.getParkingArray();
-        
-        for(int i = 0; i < parking.length; i++){
-        	Log.i(TAG, parking[i].getName());
-        	parkpos = new LatLng(parking[i].getLat(), parking[i].getLng());
-        	googleMap.addMarker(new MarkerOptions().position(parkpos).title(parking[i].getName()));
-        }
-    }
+//	ParkingService ps = new ParkingService();
+//  Parking parking = new Parking(ps.getAllParkings());
+//	 
+//  LatLng parkpos = new LatLng(parking.getLat(),parking.getLng());
+//	
+//  googleMap.addMarker(new MarkerOptions().position(parkpos).title(parking.getItems()));	
+//	googleMap.addMarker(new MarkerOptions().position(latlng).title("Home"));
+//	
+//	googleMap.moveCamera(CameraUpdateFactory.newLatLng(parkpos));
+//	googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
     
     
     

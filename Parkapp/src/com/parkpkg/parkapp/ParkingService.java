@@ -60,12 +60,10 @@ public class ParkingService {
 	
 	
 	/**
-	 * This method will download the data from the URL formatted in JSON  
-	 * 
-	 * @return JSONObject
-	 *  
+	 * Download JSON data and put in a String.
+	 * Pull JSON objects from String to put in array
+	 * @return array
 	 */
-	
 	public Parking[] getParkingArray() {
 
 		String data = null;
