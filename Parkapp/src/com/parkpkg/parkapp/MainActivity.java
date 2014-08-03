@@ -1,28 +1,34 @@
 /**
  * MainActivity.java 2014-07-16
- * Copyright Patrik Evertsson
+ * Copyright 
  */
 
 package com.parkpkg.parkapp;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,50 +36,49 @@ import android.widget.Toast;
  * 
  * @author 
  * @version 0.0.2
- *
+ * 
+ * This is the MainActivity class with the map fragment
+ * It connects to google play and sets up the google map.
  */
 
 public class MainActivity extends Activity {
 
-	// instance variables
+
 
 	public GoogleMap googleMap;
 	
-	private static final String TAG = "MainActivity";	
+	private static final String TAG = "MainActivity";
+	private static final String TAG1 = "Parkingdata";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         
-        
-       
-
+        //Draw google map only if connected to google play
         if(connectionToGooglePlay()){
         	setContentView(R.layout.activity_main);
-        	setUpMapIfNeeded();
-            Log.i(TAG, "--------HEJ-------");
-            ParkingService ps = new ParkingService();
-            String parkData;
-    		try {
-    			parkData = ps.getAllParkings();
-    			Log.i(TAG, parkData);
-    		} catch (MalformedURLException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        	Log.i(TAG, "--------OnCreate-------");
+        	setUpMapIfNeeded();   
+        	getMyLocation();
+        	
+        	//  This if-statement makes sure I can run network code in
+            //  the UI thread
+        	if (android.os.Build.VERSION.SDK_INT > 9) {
+                StrictMode.ThreadPolicy policy = 
+                        new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                }
+        	
+        	Drawmarkers drawmarkers = new Drawmarkers();
+        	drawmarkers.parkingMarkers(googleMap);
+
         }
         
     }
+    
     /**
      * Test connection between the app and Google Play
-     * @return true if the connection works, false it displays a dialog with the error
+     * @return boolean
      */
     private boolean connectionToGooglePlay(){
     	int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
@@ -85,9 +90,7 @@ public class MainActivity extends Activity {
     		
     		
     }
-    
-
-    
+     
     /**
      * This method is used to make sure we can interact and customize the map
      */
@@ -101,26 +104,44 @@ public class MainActivity extends Activity {
              * If it works, we can start using the map
              */
             if (googleMap != null) {
-            	getLocation();
-
 
             }
         }
     }
     
-    private void getLocation(){
+    /**
+     * Get my position and zoom to it on map
+     */
+    private void getMyLocation(){
     	// Get my current location
-    	googleMap.setMyLocationEnabled(true);
     	
+    	googleMap.setMyLocationEnabled(true);
+ 
     	LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
     	String provider = lm.getBestProvider(new Criteria(), true);
     	Location pos = lm.getLastKnownLocation(provider);
-
-    	LatLng latlng = new LatLng(pos.getLatitude(), pos.getLongitude());
-		googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+    	
+    	LatLng mypos = new LatLng(pos.getLatitude(), pos.getLongitude());
 		
-		googleMap.addMarker(new MarkerOptions().position(latlng).title("Home"));
+    	googleMap.moveCamera(CameraUpdateFactory.newLatLng(mypos));
+		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+		googleMap.addMarker(new MarkerOptions().position(mypos).title("Home").snippet("Mitt hem").snippet("En till"));
+
 		
     }
+
+    
+//	ParkingService ps = new ParkingService();
+//  Parking parking = new Parking(ps.getAllParkings());
+//	 
+//  LatLng parkpos = new LatLng(parking.getLat(),parking.getLng());
+//	
+//  googleMap.addMarker(new MarkerOptions().position(parkpos).title(parking.getItems()));	
+//	googleMap.addMarker(new MarkerOptions().position(latlng).title("Home"));
+//	
+//	googleMap.moveCamera(CameraUpdateFactory.newLatLng(parkpos));
+//	googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+    
+    
+    
 }
