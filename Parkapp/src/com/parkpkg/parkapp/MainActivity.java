@@ -11,12 +11,12 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.CircleOptions;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
+
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,6 +30,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 /**
@@ -69,10 +70,13 @@ public class MainActivity extends Activity {
                 StrictMode.setThreadPolicy(policy);
                 }
         	
-        	Drawmarkers drawmarkers = new Drawmarkers();
-        	drawmarkers.parkingMarkers(googleMap);
+//        	Drawmarkers drawmarkers = new Drawmarkers();
+//        	drawmarkers.parkingMarkers(googleMap);
+        	drawParkingMarkers();
 
         }
+            
+
         
     }
     
@@ -131,16 +135,51 @@ public class MainActivity extends Activity {
     }
 
     
-//	ParkingService ps = new ParkingService();
-//  Parking parking = new Parking(ps.getAllParkings());
-//	 
-//  LatLng parkpos = new LatLng(parking.getLat(),parking.getLng());
-//	
-//  googleMap.addMarker(new MarkerOptions().position(parkpos).title(parking.getItems()));	
-//	googleMap.addMarker(new MarkerOptions().position(latlng).title("Home"));
-//	
-//	googleMap.moveCamera(CameraUpdateFactory.newLatLng(parkpos));
-//	googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+   
+    private void drawParkingMarkers(){
+    	
+    	
+    	
+     	googleMap.setInfoWindowAdapter(new InfoWindowAdapter(){
+     		
+			@Override
+			public View getInfoContents(Marker marker) {
+
+				View v = getLayoutInflater().inflate(R.layout.infowindow,null);
+				
+				
+			
+				
+				return v;
+			}
+
+			@Override
+			public View getInfoWindow(Marker marker) {
+				
+				return null;
+			}
+			
+     	});
+     	
+     	LatLng parkpos = new LatLng(0.0,0.0);
+     	
+     	ParkingService ps = new ParkingService();
+        Parking[] parking = new Parking[0];
+         
+         parking = ps.getParkingArray();
+         
+         
+         for(int i = 0; i < parking.length; i++){
+         	Log.i(TAG, parking[i].getName());
+         	parkpos = new LatLng(parking[i].getLat(), parking[i].getLng());
+         	Marker marker = googleMap.addMarker(new MarkerOptions()
+         	.position(parkpos));
+         	marker.showInfoWindow();
+         	
+         }
+     }
+
+   
     
     
     
