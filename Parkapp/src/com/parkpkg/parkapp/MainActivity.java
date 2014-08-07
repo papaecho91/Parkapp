@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -147,6 +148,21 @@ public class MainActivity extends Activity {
 
 				View v = getLayoutInflater().inflate(R.layout.infowindow,null);
 				
+				TextView title = (TextView) v.findViewById(R.id.title);
+				TextView phonecode = (TextView) v.findViewById(R.id.phonecode);
+				TextView cost = (TextView) v.findViewById(R.id.cost);
+				TextView costinfo = (TextView) v.findViewById(R.id.costinfo);
+				TextView parkingspaces = (TextView) v.findViewById(R.id.parkingspaces);
+				TextView freespaces = (TextView) v.findViewById(R.id.freespaces);
+
+//				title.setText("Namn: Alelyckan Sportcenter");
+//				phonecode.setText("Telefonkod: 4994");
+//				cost.setText("3kr tim 10 kr dag (till 08.00 dagen efter) alla dagar 08-22.");
+//				costinfo.setText("");
+//				parkingspaces.setText("167");
+//				freespaces.setText("");
+
+				
 				
 			
 				
@@ -173,6 +189,7 @@ public class MainActivity extends Activity {
          	Log.i(TAG, parking[i].getName());
          	parkpos = new LatLng(parking[i].getLat(), parking[i].getLng());
          	Marker marker = googleMap.addMarker(new MarkerOptions()
+         	.snippet(parking[i].getAllAttr())
          	.position(parkpos));
          	marker.showInfoWindow();
          	

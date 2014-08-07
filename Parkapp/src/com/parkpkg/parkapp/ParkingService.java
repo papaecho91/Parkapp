@@ -67,17 +67,12 @@ public class ParkingService {
 	public Parking[] getParkingArray() {
 
 		String data = null;
-		JSONObject jsondata = new JSONObject();
 		JSONArray jsonarray = new JSONArray();
-		JSONObject jsonobject = new JSONObject();
-		String name = null;
+
 
 		try{
 			URL url = new URL(privateTollParkings);
 			try{
-				URLConnection connect = url.openConnection();
-				BufferedReader in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-				
 				URLConnection connection = new URL(url.toString()).openConnection();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(
 						connection.getInputStream()), 1024 * 16);
@@ -88,7 +83,6 @@ public class ParkingService {
 				try {
 					jsonarray = new JSONArray(data);
 					
-					//jsonobject = jsonarray.getJSONObject(5);
 					Parking[] parkings = new Parking[jsonarray.length()];
 
 					for (int i = 0; i < jsonarray.length(); i++) {
