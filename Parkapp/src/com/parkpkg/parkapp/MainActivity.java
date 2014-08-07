@@ -130,7 +130,7 @@ public class MainActivity extends Activity {
 		
     	googleMap.moveCamera(CameraUpdateFactory.newLatLng(mypos));
 		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-		googleMap.addMarker(new MarkerOptions().position(mypos).title("Home").snippet("Mitt hem").snippet("En till"));
+		//googleMap.addMarker(new MarkerOptions().position(mypos).title("Home").snippet("Mitt hem").snippet("En till"));
 
 		
     }
@@ -149,12 +149,13 @@ public class MainActivity extends Activity {
 				View v = getLayoutInflater().inflate(R.layout.infowindow,null);
 				
 				TextView title = (TextView) v.findViewById(R.id.title);
-				TextView phonecode = (TextView) v.findViewById(R.id.phonecode);
-				TextView cost = (TextView) v.findViewById(R.id.cost);
-				TextView costinfo = (TextView) v.findViewById(R.id.costinfo);
-				TextView parkingspaces = (TextView) v.findViewById(R.id.parkingspaces);
-				TextView freespaces = (TextView) v.findViewById(R.id.freespaces);
+//				TextView phonecode = (TextView) v.findViewById(R.id.phonecode);
+//				TextView cost = (TextView) v.findViewById(R.id.cost);
+//				TextView costinfo = (TextView) v.findViewById(R.id.costinfo);
+//				TextView parkingspaces = (TextView) v.findViewById(R.id.parkingspaces);
+//				TextView freespaces = (TextView) v.findViewById(R.id.freespaces);
 
+				title.setText(marker.getTitle());
 //				title.setText("Namn: Alelyckan Sportcenter");
 //				phonecode.setText("Telefonkod: 4994");
 //				cost.setText("3kr tim 10 kr dag (till 08.00 dagen efter) alla dagar 08-22.");
@@ -189,7 +190,7 @@ public class MainActivity extends Activity {
          	Log.i(TAG, parking[i].getName());
          	parkpos = new LatLng(parking[i].getLat(), parking[i].getLng());
          	Marker marker = googleMap.addMarker(new MarkerOptions()
-         	.snippet(parking[i].getAllAttr())
+         	.title(parking[i].getItems())
          	.position(parkpos));
          	marker.showInfoWindow();
          	

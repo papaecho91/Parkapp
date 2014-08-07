@@ -22,6 +22,8 @@ public class Parking implements  Serializable {
 	private int parkingSpaces;
 	private int freeSpaces;
 	private String parkingCost;
+	private String owner;
+	private int phoneParkingCode;
 
 
 	public Parking() {
@@ -33,6 +35,8 @@ public class Parking implements  Serializable {
 		
 		id = json.optString("Id");
 		name = json.optString("Name");
+		owner = json.optString("Owner");
+		phoneParkingCode = json.optInt("PhoneParkingCode");
 		freeSpaces = json.optInt("FreeSpaces");
 		lat = json.optDouble("Lat");
 		lng = json.optDouble("Long");
@@ -59,6 +63,14 @@ public class Parking implements  Serializable {
 	public int getParkableLength() {
 		return parkableLength;
 	}
+	
+	public String getOwner(){
+		return owner;
+	}
+	
+	public String getPhoneParkingCode(){
+		return Integer.toString(phoneParkingCode);
+	}
 
 	public int getParkingSpaces() {
 
@@ -70,9 +82,12 @@ public class Parking implements  Serializable {
 		return parkingSpaceCount;
 	}
 
-	public int getFreeSpaces() {
+	public String getFreeSpaces() {
 
-		return freeSpaces;
+		if(freeSpaces == 0){
+			return null;
+		}else
+			return Integer.toString(freeSpaces);
 	}
 
 	public String getParkingCost() {
@@ -134,8 +149,22 @@ public class Parking implements  Serializable {
 	}
 	
 	public String getItems(){
-		return getName() + "Maxp: "+getMaxParking() + "Currentpc: "+getCurrentParkingCost() +
-				"Parkingsp: "+ getParkingSpaces();
+		if(getFreeSpaces() == null){
+			return getName()
+					+"\nBolag: "+getOwner()
+					+ "\nAntal platser: "+getParkingSpaces() 
+					+ "\nTelefonkod: "+getPhoneParkingCode()
+					+ "\nKostnad: "+getCurrentParkingCost() +"kr"
+					;
+		}else {
+			return getName()
+					+"\nBolag: "+getOwner()
+					+"\nAntal platser: "+getParkingSpaces()
+					+"\nLediga platser: "+getFreeSpaces()
+					+"\nTelefonkod: "+getPhoneParkingCode()
+					+"\nKostnad: "+getCurrentParkingCost() +"kr"
+					;
+		}
 	}
 	
 	public double getLatLng(){
