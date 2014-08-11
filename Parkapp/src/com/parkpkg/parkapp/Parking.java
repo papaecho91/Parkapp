@@ -128,40 +128,25 @@ public class Parking implements  Serializable{
 	}
 
 	
-	
-	public String getAllAttr(){
-		return getId() + getExtraInfo() + getParkableLength() +
-				getParkingSpaces() + getParkingSpaceCount() +
-				getFreeSpaces() + getParkingCost() + getLng() +
-				getCurrentParkingCost() + getResidentialParking() +
-				getResidentialParking() + getLat() + getName() +
-				getMaxParking();
-				
-	}
-	
 	public String getItems(){
 		if(getFreeSpaces() == 0){
 			return getName()
 					+"\nBolag: "+getOwner()
 					+ "\nAntal platser: "+getParkingSpaces() 
 					+ "\nTelefonkod: "+getPhoneParkingCode()
-					+ "\nKostnad: "+getCurrentParkingCost() +"kr"
+					+ "\nKostnad: "+getCurrentParkingCost() +"kr/tim"
 					;
 		}else {
 			return getName()
 					+"\nBolag: "+getOwner()
 					+"\nAntal platser: "+getParkingSpaces()
-					+"\nSpacecount"+getParkingSpaceCount()
 					+"\nLediga platser: "+getFreeSpaces()
 					+"\nTelefonkod: "+getPhoneParkingCode()
-					+"\nKostnad: "+getCurrentParkingCost() +"kr"
+					+"\nKostnad: "+getCurrentParkingCost() +"kr/tim"
 					;
 		}
 	}
 	
-	public double getLatLng(){
-		return getLat() + getLng();
-	}
 }
 
 	//Id: Unikt id för parkeringen, om det är en kommunal parkering är det dess LTF-nummer

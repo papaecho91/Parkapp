@@ -127,10 +127,7 @@ public class MainActivity extends Activity {
     	LatLng mypos = new LatLng(pos.getLatitude(), pos.getLongitude());
 		
     	googleMap.moveCamera(CameraUpdateFactory.newLatLng(mypos));
-		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-		
-
-		
+		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));	
     }
 
     /**
@@ -154,7 +151,7 @@ public class MainActivity extends Activity {
         for(int i = 0; i < parking.length; i++){
         	parkpos = new LatLng(parking[i].getLat(), parking[i].getLng());
          	
-        	Marker marker = googleMap.addMarker(new MarkerOptions()
+        	googleMap.addMarker(new MarkerOptions()
          	.title(parking[i].getItems())
          	.position(parkpos));         	
         }
