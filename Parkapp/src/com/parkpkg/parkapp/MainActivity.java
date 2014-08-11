@@ -37,7 +37,7 @@ import android.widget.Toast;
 /**
  * 
  * @author 
- * @version 0.0.2
+ * @version 0.0.5
  * 
  * This is the MainActivity class with the map fragment
  * It connects to google play and sets up the google map.
@@ -50,7 +50,6 @@ public class MainActivity extends Activity {
 	public GoogleMap googleMap;
 	
 	private static final String TAG = "MainActivity";
-	private static final String TAG1 = "Parkingdata";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,20 +62,19 @@ public class MainActivity extends Activity {
         	setUpMapIfNeeded();   
         	getMyLocation();
         	
-        	//  This if-statement makes sure I can run network code in
-            //  the UI thread
+        	//  This if-statement makes sure I can run network code in the UI thread
         	if (android.os.Build.VERSION.SDK_INT > 9) {
                 StrictMode.ThreadPolicy policy = 
                         new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
                 }
         	
-//        	Drawmarkers drawmarkers = new Drawmarkers();
-//        	drawmarkers.parkingMarkers(googleMap);
+        	//Place out all the markers from parkingobjects
         	drawParkingMarkers();
-
+        	
+        	//Create a customized infowindow for each marker
+        	infowindow();
         }
-            
 
         
     }
@@ -97,7 +95,7 @@ public class MainActivity extends Activity {
     }
      
     /**
-     * This method is used to make sure we can interact and customize the map
+     * Make sure we can interact and customize the map
      */
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
@@ -118,8 +116,8 @@ public class MainActivity extends Activity {
      * Get my position and zoom to it on map
      */
     private void getMyLocation(){
-    	// Get my current location
     	
+    	// Get my current location
     	googleMap.setMyLocationEnabled(true);
  
     	LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -130,46 +128,59 @@ public class MainActivity extends Activity {
 		
     	googleMap.moveCamera(CameraUpdateFactory.newLatLng(mypos));
 		googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-		//googleMap.addMarker(new MarkerOptions().position(mypos).title("Home").snippet("Mitt hem").snippet("En till"));
+		
 
 		
     }
 
+    /**
+     * Generate markers from parkingobjects
+     */
+    private void drawParkingMarkers (){
+    	
+    	
+    	//Create a LatLng object
+     	LatLng parkpos = new LatLng(0.0,0.0);
+     	
+     	ParkingService ps = new ParkingService();
+        Parking[] parking = new Parking[0];    
+        
+        //Insert a list of objects to Parking.java
+        parking = ps.getParkingArray();
+        
+        
+        //Loop through the list and create a marker for each object
+        //Print the needed attributes to the infowindow on the marker
+        for(int i = 0; i < parking.length; i++){
+        	parkpos = new LatLng(parking[i].getLat(), parking[i].getLng());
+         	
+        	Marker marker = googleMap.addMarker(new MarkerOptions()
+         	.title(parking[i].getItems())
+         	.position(parkpos));         	
+        }
+     }
     
-   
-    private void drawParkingMarkers(){
-    	
-    	
-    	
+    /**
+     *Create a customized infowindow for a marker 
+     */
+    private void infowindow(){
      	googleMap.setInfoWindowAdapter(new InfoWindowAdapter(){
      		
+     		//Change the content in infowindow
 			@Override
 			public View getInfoContents(Marker marker) {
 
 				View v = getLayoutInflater().inflate(R.layout.infowindow,null);
 				
 				TextView title = (TextView) v.findViewById(R.id.title);
-//				TextView phonecode = (TextView) v.findViewById(R.id.phonecode);
-//				TextView cost = (TextView) v.findViewById(R.id.cost);
-//				TextView costinfo = (TextView) v.findViewById(R.id.costinfo);
-//				TextView parkingspaces = (TextView) v.findViewById(R.id.parkingspaces);
-//				TextView freespaces = (TextView) v.findViewById(R.id.freespaces);
 
+				//Use the defualt marker title from Marker class
 				title.setText(marker.getTitle());
-//				title.setText("Namn: Alelyckan Sportcenter");
-//				phonecode.setText("Telefonkod: 4994");
-//				cost.setText("3kr tim 10 kr dag (till 08.00 dagen efter) alla dagar 08-22.");
-//				costinfo.setText("");
-//				parkingspaces.setText("167");
-//				freespaces.setText("");
-
-				
-				
-			
 				
 				return v;
 			}
 
+			//Use default design for infowindow
 			@Override
 			public View getInfoWindow(Marker marker) {
 				
@@ -177,25 +188,10 @@ public class MainActivity extends Activity {
 			}
 			
      	});
-     	
-     	LatLng parkpos = new LatLng(0.0,0.0);
-     	
-     	ParkingService ps = new ParkingService();
-        Parking[] parking = new Parking[0];
-         
-         parking = ps.getParkingArray();
-         
-         
-         for(int i = 0; i < parking.length; i++){
-         	Log.i(TAG, parking[i].getName());
-         	parkpos = new LatLng(parking[i].getLat(), parking[i].getLng());
-         	Marker marker = googleMap.addMarker(new MarkerOptions()
-         	.title(parking[i].getItems())
-         	.position(parkpos));
-         	marker.showInfoWindow();
-         	
-         }
-     }
+    }
+    
+    
+    
 
    
     

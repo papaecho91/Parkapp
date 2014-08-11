@@ -62,7 +62,7 @@ public class ParkingService {
 	/**
 	 * Download JSON data and put in a String.
 	 * Pull JSON objects from String to put in array
-	 * @return array
+	 * @return Parking[]
 	 */
 	public Parking[] getParkingArray() {
 
@@ -107,9 +107,6 @@ public class ParkingService {
 			e.printStackTrace();
 		}//URL
 		
-
-		
-		Log.i(TAG, "----------ParkingService-----------");
 		return new Parking[0];
 
 		
