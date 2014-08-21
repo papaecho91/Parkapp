@@ -57,12 +57,15 @@ public class MainActivity extends Activity {
         
         //Draw google map only if connected to google play
         if(connectionToGooglePlay()){
+        	
         	setContentView(R.layout.activity_main);
+        	
         	Log.i(TAG, "--------OnCreate-------");
+        	
         	setUpMapIfNeeded();   
         	getMyLocation();
         	
-        	//  This if-statement makes sure I can run network code in the UI thread
+        	//This if-statement makes sure I can run network code in the UI thread
         	if (android.os.Build.VERSION.SDK_INT > 9) {
                 StrictMode.ThreadPolicy policy = 
                         new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -88,6 +91,7 @@ public class MainActivity extends Activity {
     	if(status == ConnectionResult.SUCCESS){
     		return true;
     	}else{
+    		//Displays a dialog what went wrong
     		((Dialog) GooglePlayServicesUtil.getErrorDialog(status,this,10)).show();
     	}return false;
     		

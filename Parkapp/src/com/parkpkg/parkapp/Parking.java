@@ -32,7 +32,8 @@ public class Parking implements  Serializable{
 	}
 
 	/*
-	 * 
+	 * Insert JSONObject and save the values of the 
+	 * objects in strings
 	 */
 	public Parking(JSONObject json) {
 		

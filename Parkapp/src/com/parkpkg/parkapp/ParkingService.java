@@ -72,6 +72,7 @@ public class ParkingService {
 
 		try{
 			URL url = new URL(privateTollParkings);
+			
 			try{
 				URLConnection connection = new URL(url.toString()).openConnection();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -108,8 +109,6 @@ public class ParkingService {
 		}//URL
 		
 		return new Parking[0];
-
-		
 
 
 	}
